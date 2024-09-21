@@ -1,0 +1,9 @@
+version = 0.1
+[default.deploy.parameters]
+stack_name = "transaction-processor-graphql-stack"
+resolve_s3 = true
+s3_prefix = "transaction-processor-graphql-stack"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "GraphqlRootPath=\"./\" TransactionInfoTableName=\"TransactionInfo\""
+image_repositories = []

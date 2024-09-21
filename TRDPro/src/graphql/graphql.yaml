@@ -1,0 +1,87 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: TransactionProcessor - AppSync API with DynamoDB and Lambda
+Parameters:
+  TransactionInfoTableName:
+    Type: String
+    Default: TransactionInfo
+    Description: Name of the Table.
+
+Resources:
+  # AppSync API
+  TransactionProcessorApi:
+    Type: AWS::AppSync::GraphQLApi
+    Properties:
+      Name: TransactionProcessorApi
+      AuthenticationType: API_KEY
+      XrayEnabled: true
+
+  # API Key for AppSync
+  TransactionProcessorApiKey:
+    Type: AWS::AppSync::ApiKey
+    Properties:
+      ApiId: !GetAtt TransactionProcessorApi.ApiId
+      Expires: '2025-12-31T12:00:00Z'
+
+  # GraphQL Schema for AppSync
+  TransactionProcessorSchema:
+    Type: AWS::AppSync::GraphQLSchema
+    Properties:
+      ApiId: !GetAtt TransactionProcessorApi.ApiId
+      Definition: !Sub |
+        ${AWS::ServerlessFunction::CodeUri}/TRDPro/src/graphql/schema.graphql
+
+  # DynamoDB Data Source for AppSync
+  TransactionInfoDataSource:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId: !GetAtt TransactionProcessorApi.ApiId
+      Name: TransactionInfoDataSource
+      Type: AMAZON_DYNAMODB
+      DynamoDBConfig:
+        TableName: !Ref TransactionInfoTableName
+        AwsRegion: !Ref AWS::Region
+      ServiceRoleArn: !GetAtt AppSyncServiceRole.Arn
+
+  # Resolvers for AppSync Queries
+  GetTransactionResolver:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt TransactionProcessorApi.ApiId
+      TypeName: Query
+      FieldName: getTransaction
+      DataSourceName: !GetAtt TransactionInfoDataSource.Name
+      RequestMappingTemplate: !Sub |
+        ${AWS::ServerlessFunction::CodeUri}/TRDPro/src/graphql/resolvers/Query.getTransaction.request.vtl
+      ResponseMappingTemplate: !Sub |
+        ${AWS::ServerlessFunction::CodeUri}/TRDPro/src/graphql/resolvers/Query.getTransaction.response.vtl
+
+  # IAM Role for AppSync
+  AppSyncServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: AppSyncDynamoDBPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${TransactionInfoTableName}"
+
+Outputs:
+  GraphQLApiUrl:
+    Description: URL of the AppSync API
+    Value: !GetAtt TransactionProcessorApi.GraphQLUrl

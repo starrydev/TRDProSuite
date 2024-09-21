@@ -1,0 +1,20 @@
+type AccountSplit {
+    accountCode: String!
+    percentage: Float!
+}
+
+type TransactionInfo {
+    transactionId: ID!
+    merchant: String!
+    items: [TransactionItem]!
+}
+
+type TransactionItem {
+    itemId: ID!
+    description: String!
+    accountSplits: [AccountSplit]!
+}
+
+type Query {
+    getTransaction(transactionId: ID!): TransactionInfo
+}

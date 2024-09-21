@@ -1,0 +1,25 @@
+#if($ctx.result)
+{
+    "transactionId": "$ctx.result.transactionId",
+    "merchant": "$ctx.result.merchant",
+    "items": [
+        #foreach($item in $ctx.result.transactionItems)
+        {
+        "itemId": "$item.itemId",
+        "description": "$item.description",
+        "accountSplits": [
+            #foreach($split in $item.accountSplits)
+            {
+            "accountCode": "$split.accountCode",
+            "percentage": "$split.percentage"
+            }#if($foreach.hasNext),#end
+            #end
+        ]
+        }#if($foreach.hasNext),#end
+        #end
+    ]
+}
+#else
+    null
+#end
+

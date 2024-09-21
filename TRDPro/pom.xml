@@ -1,0 +1,145 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.starryassociates</groupId>
+        <artifactId>TRDProSuite</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath> <!-- Relative path to parent POM -->
+    </parent>
+
+    <artifactId>TRDPro</artifactId>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <!-- AWS SDK Core -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sdk-core</artifactId>
+            <version>2.27.9</version>
+        </dependency>
+        <!-- AWS SDK for KMS -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>kms</artifactId>
+            <version>2.27.9</version>
+        </dependency>
+        <!-- AWS SDK for DynamoDB -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>dynamodb</artifactId>
+            <version>2.27.9</version>
+        </dependency>
+        <!-- AWS SDK for Enhanced DynamoDB -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>dynamodb-enhanced</artifactId>
+            <version>2.27.9</version>
+        </dependency>
+        <!-- AWS SDK Apache HTTP Client -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>apache-client</artifactId>
+            <version>2.27.9</version>
+        </dependency>
+        <!-- AWS SDK for Lambda -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>lambda</artifactId>
+            <version>2.27.9</version>
+        </dependency>
+        <!-- AWS SDK for SNS -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sns</artifactId>
+            <version>2.27.9</version>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>ssm</artifactId>
+            <version>2.27.9</version>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sqs</artifactId>
+            <version>2.27.9</version>
+        </dependency>
+        <!-- AWS SDK for S3 -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+            <version>2.27.9</version>
+        </dependency>
+        <!-- AWS Encryption SDK for Java -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-encryption-sdk-java</artifactId>
+            <version>1.7.0</version>
+        </dependency>
+        <!-- SLF4J API -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+        <!-- SLF4J Simple Binding -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+        <!-- Jackson JSON -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+        <!-- AWS Lambda Java Core -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-lambda-java-core</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+        <!-- AWS Lambda Java Events -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-lambda-java-events</artifactId>
+            <version>3.11.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.11.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.11.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <!-- Change the default output directory -->
+        <directory>/workspace/output/TRDPro</directory>
+
+        <!-- Optional: Change the directory for the compiled classes -->
+        <outputDirectory>${project.build.directory}/classes</outputDirectory>
+
+        <!-- Optional: Change the directory for the test classes -->
+        <testOutputDirectory>${project.build.directory}/test</testOutputDirectory>
+
+        <!-- Optional: Specify where resources should be placed -->
+        <resources>
+            <resource>
+                <directory>${project.build.directory}</directory>
+                <targetPath>TRDPro</targetPath>
+            </resource>
+        </resources>
+
+        <!-- Packaging final artifact (like JAR) into a custom directory -->
+        <finalName>TRDPro</finalName>
+    </build>
+</project>
