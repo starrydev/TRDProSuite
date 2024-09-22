@@ -1,6 +1,6 @@
-package com.starryassociates.trdpro.config;
+package com.starryassociates.core.config;
 
-import com.starryassociates.trdpro.util.KmsEncryptionHelper;
+import com.starryassociates.core.util.KmsEncryptionHelper;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.kms.KmsClient;
 import software.amazon.awssdk.services.ssm.SsmClient;

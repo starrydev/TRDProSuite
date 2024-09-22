@@ -1,7 +1,7 @@
 /*
 Custom KMS encryption to align all services with AWS V2
  */
-package com.starryassociates.trdpro.util;
+package com.starryassociates.core.util;
 
 import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.services.kms.KmsClient;

@@ -1,7 +1,5 @@
 package com.starryassociates.trdpro.util;
 
-import com.starryassociates.trdpro.config.ConfigManager;
-
 public class CryptoUtil {
 
     private static final KmsEncryptionHelper encryptionHelper = ConfigManager.getInstance().getEncryptionHelper();
