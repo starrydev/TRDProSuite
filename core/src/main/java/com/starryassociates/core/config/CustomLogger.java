@@ -1,4 +1,4 @@
-package com.starryassociates.trdpro.config;
+package com.starryassociates.core.config;
 
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.PublishRequest;

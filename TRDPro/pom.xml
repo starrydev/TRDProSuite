@@ -14,11 +14,6 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <dependency>
-            <groupId>com.starryassociates</groupId>
-            <artifactId>core</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
         <!-- Use dependencies from parent (TRDProSuite) without specifying versions -->
         <dependency>
             <groupId>software.amazon.awssdk</groupId>

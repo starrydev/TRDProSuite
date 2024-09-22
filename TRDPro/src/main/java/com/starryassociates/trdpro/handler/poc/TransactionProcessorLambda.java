@@ -7,7 +7,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.starryassociates.trdpro.config.CustomLogger;
+import com.starryassociates.core.config.CustomLogger;
 import com.starryassociates.trdpro.config.ServiceLocator;
 import com.starryassociates.trdpro.exception.TransactionException.BaseTransactionException;
 import com.starryassociates.trdpro.model.poc.TransactionInfo;

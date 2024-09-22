@@ -1,7 +1,7 @@
 package com.starryassociates.trdpro.model.poc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.starryassociates.trdpro.util.CryptoUtil;
+import com.starryassociates.core.util.CryptoUtil;
 import com.starryassociates.trdpro.util.TripType;
 import com.starryassociates.trdpro.util.TripTypeConverter;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;

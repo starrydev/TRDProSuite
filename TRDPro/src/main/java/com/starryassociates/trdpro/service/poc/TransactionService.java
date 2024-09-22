@@ -2,7 +2,7 @@ package com.starryassociates.trdpro.service.poc;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.starryassociates.trdpro.config.CustomLogger;
+import com.starryassociates.core.config.CustomLogger;
 import com.starryassociates.trdpro.model.poc.TransactionInfo;
 import com.starryassociates.trdpro.repository.poc.TransactionInfoRepo;
 import com.starryassociates.trdpro.util.AppUtil;

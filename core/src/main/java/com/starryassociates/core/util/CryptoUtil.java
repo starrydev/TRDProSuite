@@ -1,4 +1,6 @@
-package com.starryassociates.trdpro.util;
+package com.starryassociates.core.util;
+
+import com.starryassociates.core.config.ConfigManager;
 
 public class CryptoUtil {
 

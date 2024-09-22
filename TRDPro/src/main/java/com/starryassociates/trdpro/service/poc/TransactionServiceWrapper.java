@@ -2,7 +2,7 @@ package com.starryassociates.trdpro.service.poc;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.starryassociates.trdpro.config.CustomLogger;
+import com.starryassociates.core.config.CustomLogger;
 import com.starryassociates.trdpro.config.ServiceLocator;
 import com.starryassociates.trdpro.repository.poc.TransactionInfoRepo;
 import software.amazon.awssdk.services.sqs.SqsClient;

@@ -1,6 +1,6 @@
 package com.starryassociates.trdpro.poc;
 
-import com.starryassociates.trdpro.util.CryptoUtil;
+import com.starryassociates.core.util.CryptoUtil;
 
 public class CryptoTest {
     public static void main(String[] args) {

@@ -1,6 +1,7 @@
 package com.starryassociates.trdpro.config;
 
 import com.starryassociates.core.config.ConfigManager;
+import com.starryassociates.core.config.CustomLogger;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.s3.S3Client;
