@@ -1,0 +1,83 @@
+{
+  "transactions": [
+    {
+		"transactionId": "801",
+		"merchant": "Delta",
+		"totalAmount": 109.99,
+		"date": "2024-08-18",
+		"tripType": "ENTITLEMENT TRAVEL",
+		"travellerId": "271356701",
+		"creditCard": "4486120013706073",
+		"transactionItems": [
+			{
+				"itemId": "Line1",
+				"itemAmount": 50.00,
+				"description": "Delta",
+				"accountSplits": [
+					{
+						"accountCode": "AC001",
+						"percentage": 25
+					},
+					{
+						"accountCode": "AC002",
+						"percentage": 75
+					}
+				]
+			},
+			{
+				"itemId": "Line2",
+				"itemAmount": 59.99,
+				"description": "NYC",
+				"accountSplits": [
+					{
+						"accountCode": "AC001",
+						"percentage": 100
+					}
+				]
+			}
+		]
+	},
+    {
+		"transactionId": "802",
+		"merchant": "SouthWest",
+		"totalAmount": 1109.99,
+		"date": "2024-08-18",
+		"tripType": "FT-FOREIGN TRAVEL",
+		"creditCard": "4486120013706074",
+		"transactionItems": [
+			{
+				"itemId": "Line1",
+				"itemAmount": 1050.00,
+				"description": "Delta",
+				"accountSplits": [
+					{
+						"accountCode": "AC001",
+						"percentage": 45
+					},
+					{
+						"accountCode": "AC002",
+						"percentage": 55
+					}
+				]
+			},
+			{
+				"itemId": "Line2",
+				"itemAmount": 59.99,
+				"description": "NYC",
+				"accountSplits": [
+					{
+						"accountCode": "AC001",
+						"percentage": 25
+					},{
+						"accountCode": "AC002",
+						"percentage": 25
+					},{
+						"accountCode": "AC004",
+						"percentage": 50
+					}
+				]
+			}
+		]
+	}
+	]
+}

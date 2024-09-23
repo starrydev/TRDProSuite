@@ -7,3 +7,5 @@ sam deploy --guided
 aws cloudformation delete-stack --stack-name transaction-processor-api-stack
 
 sam deploy --template-file TRDProAPI.yaml --stack-name transaction-processor-api-stack --capabilities CAPABILITY_IAM --guided
+
+curl -X POST https://dyrek1jrt8.execute-api.us-east-1.amazonaws.com/prod/TransactionProcessorLambda -H "Content-Type: application/json" --data @../aws/transactions.json
