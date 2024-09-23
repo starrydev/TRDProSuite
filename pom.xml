@@ -13,7 +13,7 @@
         <module>core</module>
         <module>import</module>
         <module>export</module>
-        <module>sftpConn</module>
+        <module>connection</module>
         <!-- Add other modules like 'core' here -->
     </modules>
 

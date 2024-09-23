@@ -31,3 +31,4 @@ replay_pid*
 /export/target
 /import/target
 /sftpConn/target
+/connection/target
