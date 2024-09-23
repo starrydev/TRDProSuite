@@ -6,11 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-      </profile>
-      <profile name="Annotation profile for TRDProSuite" enabled="true">
-        <sourceOutputDir name="../../output/TRDPro/generated-sources/annotations" />
-        <sourceTestOutputDir name="../../output/TRDPro/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
+        <module name="core" />
         <module name="TRDPro" />
       </profile>
     </annotationProcessing>

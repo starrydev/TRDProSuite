@@ -1,0 +1,9 @@
+version = 0.1
+[default.deploy.parameters]
+stack_name = "transaction-processor-stack"
+resolve_s3 = true
+s3_prefix = "transaction-processor-stack"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "CodeUri=\"./\" KMSResourceARN=\"arn:aws:kms:us-east-1:982081072770:key/2ab8aa61-cbdd-47e8-a891-312a4e035716\" TransactionProcessorLambdaName=\"TransactionProcessorLambda\" TransactionFileWriterLambdaName=\"TransactionFileWriterLambda\" JobSchedulerLambdaName=\"JobSchedulerLambda\" ApiGatewayRestApiId=\"dyrek1jrt8\" ApiGatewayResourceId=\"h40jrh\" ApiGatewayStageName=\"prod\""
+image_repositories = []

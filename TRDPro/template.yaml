@@ -1,0 +1,235 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Combined SAM template for TransactionProcessor and Scheduler Lambda functions.
+
+Parameters:
+  CodeUri:
+    Type: String
+    Default: ./
+    Description: Name of the Transaction Processor Lambda function.
+  KMSResourceARN:
+    Type: String
+    Default: arn:aws:kms:us-east-1:982081072770:key/2ab8aa61-cbdd-47e8-a891-312a4e035716
+    Description: KMS Resource ARN.
+  TransactionProcessorLambdaName:
+    Type: String
+    Default: TransactionProcessorLambda
+    Description: Name of the Transaction Processor Lambda function.
+  TransactionFileWriterLambdaName:
+    Type: String
+    Default: TransactionFileWriterLambda
+    Description: Name of the Transaction File Writer Lambda function.
+  JobSchedulerLambdaName:
+    Type: String
+    Default: JobSchedulerLambda
+    Description: Name of the Job Scheduler Lambda function.
+  ApiGatewayRestApiId:
+    Type: String
+    Description: The ID of the existing API Gateway Rest API.
+  ApiGatewayResourceId:
+    Type: String
+    Description: The ID of the existing API Gateway Resource to attach the Lambda function to.
+  ApiGatewayStageName:
+    Type: String
+    Default: prod
+    Description: The name of the existing API Gateway stage.
+
+Resources:
+  # IAM Role for Transaction Processor Lambda
+  CommonForLambdaRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: "lambda.amazonaws.com"
+            Action: "sts:AssumeRole"
+      Policies:
+        - PolicyName: "InvokeLambdaPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "lambda:InvokeFunction"
+                Resource: "*"
+        - PolicyName: "DynamoDBCrudPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "dynamodb:PutItem"
+                  - "dynamodb:GetItem"
+                  - "dynamodb:UpdateItem"
+                  - "dynamodb:DeleteItem"
+                  - "dynamodb:Query"
+                  - "dynamodb:Scan"
+                Resource: "*"
+        - PolicyName: "KMSAccessPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "kms:GenerateDataKey"
+                  - "kms:Decrypt"
+                Resource: !Ref KMSResourceARN
+        - PolicyName: "CommonForLambdaPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - "s3:GetObject"
+                  - "s3:PutObject"
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - "ssm:GetParameter"
+                  - "ssm:GetParameters"
+                  - "ssm:GetParametersByPath"
+                  - "ssm:DescribeParameters"
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - "sqs:SendMessage"
+                  - "sqs:ReceiveMessage"
+                  - "sqs:DeleteMessage"
+                  - "sqs:GetQueueAttributes"
+                Resource: "*"
+
+  # Transaction Processor Lambda
+  TransactionProcessorLambdaFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: !Ref TransactionProcessorLambdaName
+      Handler: com.starryassociates.trdpro.handler.poc.TransactionProcessorLambda::handleRequest
+      Runtime: java11
+      CodeUri: !Ref CodeUri
+      MemorySize: 512
+      Timeout: 60
+      Role: !GetAtt CommonForLambdaRole.Arn
+
+  # Transaction File Writer Lambda
+  TransactionFileWriterLambdaFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: !Ref TransactionFileWriterLambdaName
+      Handler: com.starryassociates.trdpro.handler.poc.TransactionFileWriterLambda::handleRequest
+      Runtime: java11
+      CodeUri: !Ref CodeUri
+      MemorySize: 512
+      Timeout: 60
+      Role: !GetAtt CommonForLambdaRole.Arn
+      #Events:
+      #  # Ensure that only one event trigger exists
+      #  SQSTrigger:
+      #    Type: SQS
+      #    Properties:
+      #      Queue: !GetAtt TransactionQueue.Arn
+
+  # Job Scheduler Lambda
+  JobSchedulerLambdaFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: !Ref JobSchedulerLambdaName
+      Handler: com.starryassociates.trdpro.jobs.JobSchedulerLambda::handleRequest
+      Runtime: java11
+      CodeUri: !Ref CodeUri
+      Role: !GetAtt CommonForLambdaRole.Arn
+      MemorySize: 512
+      Timeout: 900 # Set JobScheduler timeout based on processing time 9 MINUTES
+
+  # EventBridge rule that triggers the Lambda every 15 minutes
+  JobSchedulerEventBridgeRule:
+    Type: 'AWS::Events::Rule'
+    Properties:
+      ScheduleExpression: 'rate(15 minutes)'  # Trigger every 15 minutes
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt JobSchedulerLambdaFunction.Arn
+          Id: "JobSchedulerLambdaTarget"
+    DependsOn: JobSchedulerLambdaFunction
+
+  # Lambda permissions to allow EventBridge to invoke the function
+  JobSchedulerLambdaInvokePermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !Ref JobSchedulerLambdaFunction
+      Principal: 'events.amazonaws.com'
+      SourceArn: !GetAtt JobSchedulerEventBridgeRule.Arn
+
+  # Job
+  UFMSJobForSftpGetFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: 'UFMSJobForSftpGet'
+      Handler: com.starryassociates.trdpro.jobs.ufms.UFMSJobForSftpGet::handleRequest
+      Runtime: java11
+      CodeUri: !Ref CodeUri
+      Role: !GetAtt CommonForLambdaRole.Arn
+      MemorySize: 512
+      Timeout: 600
+
+  # SQS Queue for Transactions
+  TransactionQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: TransactionQueue
+      VisibilityTimeout: 420  # Set visibility timeout based on processing time 7 MINUTES
+
+  # SQS Queue Policy
+  SQSQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref TransactionQueue
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: "*"
+            Action: "sqs:SendMessage"
+            Resource: !GetAtt TransactionQueue.Arn
+            Condition:
+              ArnEquals:
+                aws:SourceArn: !GetAtt TransactionProcessorLambdaFunction.Arn
+
+  # Store the Queue URL in Parameter Store
+  TransactionQueueUrlParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: "/app/transactionQueueUrl"
+      Type: String
+      Value: !GetAtt TransactionQueue.QueueUrl
+
+Outputs:
+  TransactionProcessorLambdaFunctionArn:
+    Description: "ARN of the Transaction Processor Lambda Function"
+    Value: !GetAtt TransactionProcessorLambdaFunction.Arn
+
+  TransactionFileWriterLambdaFunctionArn:
+    Description: "ARN of the Transaction File Writer Lambda Function"
+    Value: !GetAtt TransactionFileWriterLambdaFunction.Arn
+
+  JobSchedulerLambdaFunctionArn:
+    Description: "ARN of the Job Scheduler Lambda Function"
+    Value: !GetAtt JobSchedulerLambdaFunction.Arn
+
+  TransactionQueueUrl:
+    Description: "URL of the SQS Queue for Transactions"
+    Value: !Ref TransactionQueue
+
+  TransactionQueueArn:
+    Description: "ARN of the SQS Queue for Transactions"
+    Value: !GetAtt TransactionQueue.Arn

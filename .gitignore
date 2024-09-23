@@ -27,3 +27,4 @@ replay_pid*
 /core/target
 /target
 /.idea
+/TRDPro/.aws-sam

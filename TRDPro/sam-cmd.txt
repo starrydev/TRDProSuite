@@ -1,0 +1,9 @@
+set JAVA_HOME=C:\workspace\jdk-11.0.23
+set PATH=%JAVA_HOME%\bin;%PATH%
+
+sam build --base-dir ./
+sam deploy --guided
+
+aws cloudformation delete-stack --stack-name transaction-processor-api-stack
+
+sam deploy --template-file TRDProAPI.yaml --stack-name transaction-processor-api-stack --capabilities CAPABILITY_IAM --guided

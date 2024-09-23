@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SAM template to update API link.
+
+Parameters:
+  TransactionProcessorLambdaName:
+    Type: String
+    Default: TransactionProcessorLambda
+    Description: Name of the Transaction Processor Lambda function.
+  ApiGatewayRestApiId:
+    Type: String
+    Description: The path of the existing API Gateway Rest API.
+  ApiGatewayResourcePath:
+    Type: String
+    Default: TransactionProcessorLambda
+    Description: The ID of the existing API Gateway Resource to attach the Lambda function to.
+  ApiGatewayStageName:
+    Type: String
+    Default: prod
+    Description: The name of the existing API Gateway stage.
+
+Resources:
+  TransactionProcessorLambdaPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !Ref TransactionProcessorLambdaName
+      Principal: 'apigateway.amazonaws.com'
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayRestApiId}/${ApiGatewayStageName}/ANY/${ApiGatewayResourcePath}'
+
