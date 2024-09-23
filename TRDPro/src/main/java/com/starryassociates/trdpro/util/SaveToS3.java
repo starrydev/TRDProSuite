@@ -2,7 +2,7 @@ package com.starryassociates.trdpro.util;
 
 import com.starryassociates.core.config.ConfigManager;
 import com.starryassociates.core.config.CustomLogger;
-import com.starryassociates.trdpro.config.ServiceLocator;
+import com.starryassociates.core.config.ServiceLocator;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
 import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.core.sync.RequestBody;

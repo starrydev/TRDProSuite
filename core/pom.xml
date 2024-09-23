@@ -23,6 +23,22 @@
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>regions</artifactId> <!-- Make sure the regions module is added -->
         </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>dynamodb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>dynamodb-enhanced</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>apache-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+        </dependency>
         <!-- AWS SDK for KMS -->
         <dependency>
             <groupId>software.amazon.awssdk</groupId>

@@ -6,7 +6,7 @@ import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.model.Page;
 import software.amazon.awssdk.enhanced.dynamodb.model.ScanEnhancedRequest;
 import com.starryassociates.core.config.CustomLogger;
-import com.starryassociates.trdpro.config.ServiceLocator;
+import com.starryassociates.core.config.ServiceLocator;
 import com.starryassociates.trdpro.exception.TransactionException;
 import com.starryassociates.trdpro.model.poc.TransactionInfo;
 
