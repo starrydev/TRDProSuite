@@ -1,7 +1,5 @@
 package com.starryassociates.sftp;
 
-import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jcraft.jsch.*;
@@ -16,19 +14,14 @@ import java.util.*;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-public class SftpServiceLambda implements RequestHandler<Map<String, Object>, String> {
+public class SftpService {
 
-    private static final Logger logger = Logger.getLogger(SftpServiceLambda.class.getName());
+    private static final Logger logger = Logger.getLogger(SftpService.class.getName());
 
     private static final String HHS_SFTP_SECRET_NAME = "HHS_SFTP_SECRET";
     private static final String CITI_SFTP_SECRET_NAME = "CITI_SFTP_SECRET";
 
-    @Override
-    public String handleRequest(Map<String, Object> input, Context context) {
-        String clientName = (String) input.get("clientName");
-        String operationType = (String) input.get("operationType");  // "upload" or "download"
-        String fileName = (String) input.get("fileName");
-
+    public String performSftpOperation(String clientName, String operationType, String fileName) {
         try {
             if ("upload".equals(operationType)) {
                 uploadFilesMatchingWildcard(clientName, fileName);
@@ -44,12 +37,9 @@ public class SftpServiceLambda implements RequestHandler<Map<String, Object>, St
         }
     }
 
-    /**
-     * Retrieves the SFTP client configuration from AWS Secrets Manager using AWS SDK v2.
-     */
     private Map<String, Object> getSftpClientConfig(String secretName) throws Exception {
         SecretsManagerClient secretsManagerClient = SecretsManagerClient.builder()
-                .region(Region.of(System.getenv("AWS_REGION")))  // Use region from environment variables or set manually
+                .region(Region.of(System.getenv("AWS_REGION")))
                 .build();
 
         GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()
@@ -70,17 +60,17 @@ public class SftpServiceLambda implements RequestHandler<Map<String, Object>, St
         config.put("passphrase", secretJson.has("passphrase") ? secretJson.get("passphrase").asText() : "");
         config.put("remoteGetDir", secretJson.get("remoteGetDir").asText());
         config.put("remotePutDir", secretJson.get("remotePutDir").asText());
-        config.put("localGetDir", System.getenv("EXPORT_FOLDER")); // From Lambda env variables
-        config.put("localPutDir", System.getenv("IMPORT_FOLDER")); // From Lambda env variables
+        config.put("localGetDir", System.getenv("EXPORT_FOLDER"));
+        config.put("localPutDir", System.getenv("IMPORT_FOLDER"));
         config.put("remoteGetFileWildcard", Arrays.asList(secretJson.get("remoteGetFileWildcard").asText().split(",")));
         config.put("remotePutFileWildcard", Arrays.asList(secretJson.get("remotePutFileWildcard").asText().split(",")));
 
-        secretsManagerClient.close();  // Close the client connection after use
+        secretsManagerClient.close();
 
         return config;
     }
 
-    private void uploadFilesMatchingWildcard(String clientName, String fileName) throws Exception {
+    public void uploadFilesMatchingWildcard(String clientName, String fileName) throws Exception {
         sftpOperation(clientName, (channelSftp, config) -> {
             String localGetDir = (String) config.get("localGetDir");
             List<String> wildcards = (List<String>) config.get("remotePutFileWildcard");
@@ -90,7 +80,6 @@ public class SftpServiceLambda implements RequestHandler<Map<String, Object>, St
                 throw new FileNotFoundException("No files found matching the wildcard(s) for upload.");
             }
 
-            // If fileName is provided, filter the matching files to only include those that start with the fileName
             if (fileName != null) {
                 matchingFiles.removeIf(file -> !file.getName().startsWith(fileName));
                 if (matchingFiles.isEmpty()) {
@@ -106,7 +95,7 @@ public class SftpServiceLambda implements RequestHandler<Map<String, Object>, St
         });
     }
 
-    private void downloadFilesMatchingWildcard(String clientName, String fileName, boolean oneFileOnly) throws Exception {
+    public void downloadFilesMatchingWildcard(String clientName, String fileName, boolean oneFileOnly) throws Exception {
         sftpOperation(clientName, (channelSftp, config) -> {
             channelSftp.cd((String) config.get("remoteGetDir"));
             Vector<ChannelSftp.LsEntry> files = channelSftp.ls(".");
