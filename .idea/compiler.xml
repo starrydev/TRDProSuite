@@ -7,10 +7,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="core" />
+        <module name="import" />
+        <module name="sftpConn" />
         <module name="TRDPro" />
+        <module name="export" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="apiConn" target="16" />
       <module name="graphql" target="11" />
     </bytecodeTargetLevel>
   </component>

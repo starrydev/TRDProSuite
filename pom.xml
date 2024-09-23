@@ -11,6 +11,9 @@
     <modules>
         <module>TRDPro</module>
         <module>core</module>
+        <module>import</module>
+        <module>export</module>
+        <module>sftpConn</module>
         <!-- Add other modules like 'core' here -->
     </modules>
 
@@ -86,6 +89,18 @@
                 <artifactId>s3</artifactId>
                 <version>2.27.9</version>
             </dependency>
+            <!-- AWS Secrets Manager SDK -->
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>secretsmanager</artifactId>
+                <version>2.27.9</version>
+            </dependency>
+            <!-- org.json for JSONObject handling -->
+            <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>20230227</version>
+            </dependency>
             <!-- AWS Encryption SDK for Java -->
             <dependency>
                 <groupId>com.amazonaws</groupId>
@@ -115,6 +130,16 @@
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-lambda-java-events</artifactId>
                 <version>3.11.0</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.persistence</groupId>
+                <artifactId>jakarta.persistence-api</artifactId>
+                <version>3.2.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>5.1.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
